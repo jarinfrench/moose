@@ -12,19 +12,19 @@
 #include "MooseRandom.h"
 
 // Fordward declaration
-class BoundaryAnisotropyProvider;
+class RandomBoundaryAnisotropyProvider;
 class GrainTrackerInterface;
 
 template <>
-InputParameters validParams<BoundaryAnisotropyProvider>();
+InputParameters validParams<RandomBoundaryAnisotropyProvider>();
 
 /**
  * Assign anisotropic boundary properties to random grains
  */
-class BoundaryAnisotropyProvider
+class RandomBoundaryAnisotropyProvider
 {
 public:
-  BoundaryAnisotropyProvider(const InputParameters & parameters);
+  RandomBoundaryAnisotropyProvider(const InputParameters & parameters);
 
   virtual void initialize() override;
   virtual void execute() override {}
