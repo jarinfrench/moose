@@ -12,6 +12,8 @@
 #include "MultiMooseEnum.h"
 #include "MathUtils.h"
 
+#include <algorithm>
+
 registerMooseObject("PhaseFieldApp", RandomBoundaryAnisotropyProvider);
 
 template <>
@@ -53,13 +55,19 @@ RandomBoundaryAnisotropyProvider::RandomBoundaryAnisotropyProvider(const InputPa
     _aniso_mobility(getParam<Real>("aniso_mobility")),
     _aniso_q(getParam<Real>("aniso_q"))
 {
-  _random.seed(0, getParam<unsigned int>("seed"));
+  srand(seed);
 }
 
 void RandomBoundaryAnisotropyProvider::initialize()
 {
   std::vector<std::pair<unsigned int, unsigned int> > matrix_positions;
   auto grain_num = _grain_tracker.getTotalFeatureCount();
+
+  _energies.assign(grain_num, std::vector<Real> (grain_num, _iso_energy));
+  _mobilities.assign(grain_num, std::vector<Real> (grain_num, iso_mobility));
+  _qs.assign(grain_num, std::vector<Real> (grain_num, _iso_q));
+
+  // These are the unique indices for the property matrix in the upper triangle
   for (unsigned int i = 0; i < grain_num - 1; ++i)
   {
     for (unsigned int j = i + 1; j < grain_num; ++j)
@@ -91,18 +99,49 @@ void RandomBoundaryAnisotropyProvider::initialize()
       switch (aniso_id)
       {
         case 0: // energy
-          //  function call with energy values
+          _energies.assign(grain_num, std::vector<Real> (grain_num, _aniso_energy));
           break;
         case 1: // mobility
-          // function call with mobility values
+          _mobilities.assign(grain_num, std::vector<Real> (grain_num, iso_mobility));
           break;
         case 2: // activation energy
-          // function call with activation energy values
+          _qs.assign(grain_num, std::vector<Real> (grain_num, _iso_q));
           break;
         default:
           mooseError("Unknown anisotropy type ", aniso_id);
       }
-      // do something here to specify the boundary properties - probably a function call
+    }
+  }
+  else
+  {
+    std::vector<std::pair <unsigned int, unsigned int> > changed_indices;
+    changed_indices.resize(_n);
+
+    random_shuffle(matrix_positions.begin(), matrix_positions.end());
+
+    for (unsigned int i = 0; i < changed_indices.size(); ++i)
+    {
+      changed_indices[i] = matrix_positions[i];
+    }
+
+    for (const auto & anisotropy : _anisotropies)
+    {
+      auto aniso_id = anisotropy.id();
+
+      switch (aniso_id)
+      {
+        case 0:
+          changeValues(_energies, changed_indices, _aniso_energy);
+          break;
+        case 1:
+          changeValues(_mobilities, changed_indices, _aniso_mobility);
+          break;
+        case 2:
+          changeValues(_qs, changed_indices, _aniso_q);
+          break;
+        default:
+          mooseError("Unknown anisotropy type ", aniso_id);
+      }
     }
   }
 
@@ -110,4 +149,20 @@ void RandomBoundaryAnisotropyProvider::initialize()
 
   // Is there a way the user can specify which boundaries they want to mark as anisotropic?  addParam<std::string>("vars", "The list of boundaries that are marked as anisotropic")?
 
+}
+
+void
+RandomBoundaryAnisotropyProvider::changeValues(std::vector<std::vector<Real> > & matrix,
+                                               const std::vector<std:pair<unsigned int, unsigned int> > & indices,
+                                               const Real & value)
+{
+  for (unsigned int i = 0; i < indices.size(); ++i)
+  {
+    unsigned int a = indices[i].first;
+    unsigned int b = indices[i].second;
+
+    // Change the values of the matrix entries, maintaining a symmetric matrix
+    matrix[a][b] = value;
+    matrix[b][a] = value;
+  }
 }

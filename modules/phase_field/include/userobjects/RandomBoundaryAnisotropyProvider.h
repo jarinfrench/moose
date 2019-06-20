@@ -29,11 +29,15 @@ public:
   virtual void initialize() override;
   virtual void execute() override {}
   virtual void finalize() override {}
-
-  virtual unsigned int getGrainNum() const override;
+  
+  // Function to change the values of the passed in matrix.
+  void changeValues(std::vector<std::vector<Real> > &,
+                    const std::vector<std::pair<unsigned int, unsigned int> > &,
+                    const Real &)
+  
+  virtual const std::vector<std::vector<Real> > & getProperties(unsigned int, unsigned int) const override;
 
 protected:
-  std::vector<std::vector<Real> > generatePropertyMatrix(unsigned int size, unsigned int num_to_change, Real iso_value, Real aniso_value);
   const GrainTrackerInterface & _grain_tracker;
   std::vector<std::vector<Real> > _energies, _mobilities, _qs;
   
@@ -49,6 +53,4 @@ protected:
   Real _fraction; // fraction of grain boundaries to change properties of
   
   MultiMooseEnum _anisotropies; // The properties to assign anisotropic values to
-
-  MooseRandom _random;
 }
