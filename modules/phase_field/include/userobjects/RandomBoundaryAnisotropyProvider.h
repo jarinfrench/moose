@@ -10,6 +10,7 @@
 #pragma once
 
 #include "MooseRandom.h"
+#include <vector>
 
 // Fordward declaration
 class RandomBoundaryAnisotropyProvider;
@@ -29,28 +30,28 @@ public:
   virtual void initialize() override;
   virtual void execute() override {}
   virtual void finalize() override {}
-  
-  // Function to change the values of the passed in matrix.
-  void changeValues(std::vector<std::vector<Real> > &,
-                    const std::vector<std::pair<unsigned int, unsigned int> > &,
-                    const Real &)
-  
-  virtual const std::vector<std::vector<Real> > & getProperties(unsigned int, unsigned int) const override;
 
-protected:
-  const GrainTrackerInterface & _grain_tracker;
-  std::vector<std::vector<Real> > _energies, _mobilities, _qs;
-  
+  // Function to change the values of the passed in matrix.
+  void changeValues(std::vector<std::vector<Real>> &,
+                    const std::vector<std::pair<unsigned int, unsigned int>> &,
+                    const Real &)
+
+      virtual const std::vector<Real> & getProperties(unsigned int, unsigned int) const override;
+  virtual const
+
+      protected : const GrainTrackerInterface & _grain_tracker;
+  std::vector<std::vector<Real>> _energies, _mobilities, _qs;
+
   /// Isotropic values
   Real _iso_energy, _iso_mobility, _iso_q;
-  
+
   /// Anisotropic values
   Real _aniso_energy, _aniso_mobility, _aniso_q;
-  
+
   unsigned int _seed; // random number generator seed
-  unsigned int _n; // number of grain boundaries to change properties of
-  
+  unsigned int _n;    // number of grain boundaries to change properties of
+
   Real _fraction; // fraction of grain boundaries to change properties of
-  
+
   MultiMooseEnum _anisotropies; // The properties to assign anisotropic values to
 }

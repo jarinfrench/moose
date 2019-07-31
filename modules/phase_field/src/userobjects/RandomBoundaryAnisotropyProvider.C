@@ -13,6 +13,7 @@
 #include "MathUtils.h"
 
 #include <algorithm>
+#include <vector>
 
 registerMooseObject("PhaseFieldApp", RandomBoundaryAnisotropyProvider);
 
@@ -165,4 +166,15 @@ RandomBoundaryAnisotropyProvider::changeValues(std::vector<std::vector<Real> > &
     matrix[a][b] = value;
     matrix[b][a] = value;
   }
+}
+
+const vector <Real>
+RandomBoundaryAnisotropyProvider::getProperties(unsigned int i, unsigned int j) const
+{
+  mooseAssert(i < getGrainNum(), "Requesting grain boundary properties for an invalid grain id");
+  vector <Real> properties (3, 0.0);
+  properties[0] = getBoundaryEnergy(i, j);
+  properties[1] = getBoundaryMobility(i, j);
+  properties[2] = getBoundaryActivationEnergy(i, j);
+  return properties;
 }
