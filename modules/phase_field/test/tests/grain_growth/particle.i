@@ -112,7 +112,7 @@
   nl_max_its = 20
   nl_rel_tol = 1.0e-9
   start_time = 0.0
-  num_steps = 10
+  num_steps = 75
   dt = 80.0
 
   [./Adaptivity]

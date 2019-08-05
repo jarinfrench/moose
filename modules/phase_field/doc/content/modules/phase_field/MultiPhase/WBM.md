@@ -30,7 +30,7 @@ Check out the example input at `moose/modules/phase_field/examples/multiphase/De
 
 ## Lagrange multiplier constraint
 
-As first (hard) method for constraint enforcement the Lagrange multiplier technique
+As a first (hard) method for constraint enforcement the Lagrange multiplier technique
 is available, where the Lagrange multiplier $\lambda$ is a non-linear variable
 
 With $a_i(\vec\eta,\vec c,v)$ being the weak form (Allen-Cahn) residual for the

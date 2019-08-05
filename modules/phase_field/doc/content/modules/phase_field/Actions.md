@@ -22,4 +22,4 @@ and
 
 ## See also
 
-- [Phase Field FAQ](FAQ) - Frequently asked questions for MOOSE phase-field models.
+- [Phase Field FAQ](FAQ.md) - Frequently asked questions for MOOSE phase-field models.

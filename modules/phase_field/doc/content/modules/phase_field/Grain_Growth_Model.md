@@ -69,7 +69,7 @@ options are shown in the Table, below.
 | `BicrystalCircleGrainIC`    | Circle grain and matrix grain                                                                                                 |
 | `Tricrystal2CircleGrainsIC` | Two circle grains and a matrix grain                                                                                          |
 | `PolycrystalHexGrainIC`     | `n_grain` grains in a hexagonal structure                                                                                     |
-| `PolycrystalColoringIC`     | `n_grain` grains using a plugin based tesselation (using user objects such as [`PolycrystalVoronoi`](PolycrystalVoronoi.md))  |
+| `PolycrystalColoringIC`     | `n_grain` grains using a plugin based tessellation (using user objects such as [`PolycrystalVoronoi`](PolycrystalVoronoi.md))  |
 | `PolycrystalRandomIC`       | Randomly seeds grain order parameters                                                                                         |
 
 An additional option is to reconstruct the microstructure from experimental data
